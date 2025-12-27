@@ -1,4 +1,4 @@
-Missing files for it to work:
+some files are missing because of the size of the file so if you wanna test it, be careful about that please:
 
 ARCFACE:  
 - venv folder
@@ -10,4 +10,3 @@ TRIPLETNET:
 - models_output (make train.py work so you can get the trained files)
 
 
-some files are missing because of the size of the file so if you wanna test it, be careful about that please.
