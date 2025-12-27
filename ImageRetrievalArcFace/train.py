@@ -9,9 +9,7 @@ from models.arcface_model import ArcFaceModel
 from losses.arcface_loss import ArcFaceLoss
 
 
-# -------------------------
 # CONFIG
-# -------------------------
 DATASET_ROOT = "jewelry_dataset/train"
 BATCH_SIZE = 32
 EPOCHS = 10
@@ -20,9 +18,7 @@ LR = 1e-4
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
-# -------------------------
 # MAIN TRAIN LOOP
-# -------------------------
 def main():
 
     transform = transforms.Compose([
@@ -86,8 +82,6 @@ def main():
     print("training completed successfully.")
 
 
-# -------------------------
 # ENTRY POINT
-# -------------------------
 if __name__ == "__main__":
     main()

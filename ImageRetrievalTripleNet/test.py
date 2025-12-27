@@ -3,9 +3,7 @@ from torchvision import transforms
 from PIL import Image
 import os
 
-# -----------------------
 # CONFIG
-# -----------------------
 DEVICE = "cuda" if torch.cuda.is_available() else "mps" if torch.backends.mps.is_available() else "cpu"
 MODEL_PATH = "models/triplet/triplet.pth"
 EMBEDDING_DIM = 128
@@ -13,9 +11,7 @@ EMBEDDINGS_PATH = "embeddings.pt"
 IMAGE_PATH = "/Users/emirg/Desktop/test.jpg"
 TOP_K = 5
 
-# -----------------------
-# MODEL TANIMI (TripletNet)
-# -----------------------
+# MODEL (TripletNet)
 import torch.nn as nn
 from torchvision import models
 
@@ -33,27 +29,21 @@ class TripletNet(nn.Module):
         x = nn.functional.normalize(x, p=2, dim=1)
         return x
 
-# -----------------------
 # MODELİ YÜKLE
-# -----------------------
 model = TripletNet(EMBEDDING_DIM).to(DEVICE)
 model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
 model.eval()
 
 print(f"using device: {DEVICE}")
 
-# -----------------------
 # EMBEDDINGS VE FILEPATHS YÜKLE
-# -----------------------
 data = torch.load(EMBEDDINGS_PATH, map_location=DEVICE)
 all_embeddings = data["embeddings"]  # tensor: num_samples x embedding_dim
 all_filepaths = data["filepaths"]    # list: num_samples
 
 print(f"loaded {len(all_filepaths)} embeddings")
 
-# -----------------------
 # TEST RESMİ HAZIRLA
-# -----------------------
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -67,15 +57,11 @@ img_tensor = transform(img).unsqueeze(0).to(DEVICE)
 print(f"query image:")
 img.show()
 
-# -----------------------
 # TEST EMBEDDING ÇIKAR
-# -----------------------
 with torch.no_grad():
     test_emb = model(img_tensor)
 
-# -----------------------
 # COSINE SIMILARITY HESAPLA
-# -----------------------
 from torch.nn.functional import cosine_similarity
 
 # all_embeddings'i device'a taşı
@@ -86,9 +72,7 @@ topk_vals, topk_idx = torch.topk(similarities, TOP_K)
 
 print(f"\ntop {TOP_K} most similar images:\n")
 
-# -----------------------
 # EN BENZER K IMAGE'İ GÖSTER
-# -----------------------
 for i, idx in enumerate(topk_idx):
     idx = idx.item()
     img_path = all_filepaths[idx]

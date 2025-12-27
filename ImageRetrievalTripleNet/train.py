@@ -6,12 +6,10 @@ from torchvision import models, transforms
 from dataset import TripletFolderDataset
 from tqdm import tqdm
 
-# -----------------------
 # CONFIG
-# -----------------------
 DATASET_ROOT = "jewelry_dataset/train"
 BATCH_SIZE = 8
-EPOCHS = 10          
+EPOCHS = 10
 LR = 1e-4
 EMBEDDING_DIM = 128
 NUM_WORKERS = 0
@@ -23,9 +21,7 @@ DEVICE = (
     else "cpu"
 )
 
-# -----------------------
 # MODEL
-# -----------------------
 class TripletNet(nn.Module):
     def __init__(self, embedding_dim=128):
         super().__init__()
@@ -40,9 +36,7 @@ class TripletNet(nn.Module):
         x = nn.functional.normalize(x, p=2, dim=1)
         return x
 
-# -----------------------
 # MAIN
-# -----------------------
 def main():
     print("starting training")
     print(f"device: {DEVICE}")
@@ -68,9 +62,7 @@ def main():
     criterion = nn.TripletMarginLoss(margin=1.0, p=2)
     optimizer = torch.optim.Adam(model.parameters(), lr=LR)
 
-    # -----------------------
     # TRAIN LOOP
-    # -----------------------
     for epoch in range(EPOCHS):
         model.train()
         running_loss = 0.0
@@ -99,13 +91,10 @@ def main():
 
         print(f"epoch {epoch + 1} finished | avg Loss: {avg_loss:.4f}")
 
-    # -----------------------
     # SAVE MODEL
-    # -----------------------
     torch.save(model.state_dict(), SAVE_PATH)
     print(f"\nmodel saved to {SAVE_PATH}")
     print("training completed successfully")
 
-# -----------------------
 if __name__ == "__main__":
     main()

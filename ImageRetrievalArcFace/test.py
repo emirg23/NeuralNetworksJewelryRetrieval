@@ -34,7 +34,7 @@ query_img = Image.open(
 
 results = retriever.get_top_k(query_img, transform, k=5)
 
-print("🔍 Similar items:")
+print("similar items:")
 
 for i, path in enumerate(results, 1):
     print(f"{i}. {path}")

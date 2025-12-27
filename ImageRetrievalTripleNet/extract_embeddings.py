@@ -6,9 +6,7 @@ from torchvision import models, transforms
 from PIL import Image
 from tqdm import tqdm
 
-# -----------------------
 # CONFIG
-# -----------------------
 DATASET_ROOT = "jewelry_dataset/train"
 BATCH_SIZE = 8
 EMBEDDING_DIM = 128
@@ -17,9 +15,7 @@ MODEL_PATH = "models/triplet/triplet.pth"
 SAVE_PATH = "embeddings.pt"
 NUM_WORKERS = 0
 
-# -----------------------
 # MODEL DEFINITION
-# -----------------------
 class TripletNet(nn.Module):
     def __init__(self, embedding_dim=128):
         super().__init__()
@@ -34,15 +30,12 @@ class TripletNet(nn.Module):
         x = nn.functional.normalize(x, p=2, dim=1)
         return x
 
-# -----------------------
 # SIMPLE IMAGE DATASET
-# -----------------------
 class SimpleImageDataset:
     def __init__(self, root, transform=None):
         self.transform = transform
         self.image_paths = []
         
-        # Collect all image paths
         for class_name in sorted(os.listdir(root)):
             class_path = os.path.join(root, class_name)
             if os.path.isdir(class_path):
@@ -61,9 +54,7 @@ class SimpleImageDataset:
             img = self.transform(img)
         return img, img_path
 
-# -----------------------
 # TRANSFORMS & DATASET
-# -----------------------
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -73,9 +64,7 @@ transform = transforms.Compose([
 dataset = SimpleImageDataset(DATASET_ROOT, transform=transform)
 loader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS)
 
-# -----------------------
 # LOAD MODEL
-# -----------------------
 model = TripletNet(EMBEDDING_DIM).to(DEVICE)
 model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
 model.eval()
@@ -83,9 +72,7 @@ model.eval()
 print(f"using device: {DEVICE}")
 print(f"total images: {len(dataset)}")
 
-# -----------------------
 # EXTRACT EMBEDDINGS
-# -----------------------
 all_embeddings = []
 all_filepaths = []
 
